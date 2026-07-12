@@ -1,0 +1,32 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: python -m pip install -e .
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Validate bundled Skill
+        run: python plugins/archflow-studio/skills/archflow-studio/scripts/validate_skill_package.py plugins/archflow-studio/skills/archflow-studio
+      - name: Installer lifecycle smoke test
+        shell: powershell
+        run: ./tests/windows_installer_smoke.ps1
+      - name: Developer Preview release gates
+        run: python scripts/release_check.py --gates release/release-gates.json --channel developer-preview
+      - name: Build Developer Preview
+        shell: powershell
+        run: ./installer/windows/build_release.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: archflow-studio-windows-developer-preview
+          path: dist/*.zip

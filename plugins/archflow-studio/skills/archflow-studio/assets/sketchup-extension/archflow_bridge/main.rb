@@ -1,0 +1,326 @@
+# SPDX-FileCopyrightText: 2026 OHDESIGN
+# SPDX-License-Identifier: Apache-2.0
+
+require 'sketchup.rb'
+require 'json'
+require 'socket'
+require 'digest'
+require 'fileutils'
+require 'securerandom'
+
+module ArchFlow
+  module Bridge
+    HOST = '127.0.0.1'.freeze
+    PORT = 9877
+    PROTOCOL = 'archflow-sketchup/1'.freeze
+    MAX_REQUEST_BYTES = 8 * 1024 * 1024
+    OFFICIAL_WEBSITE = 'https://archflow.best'.freeze
+    PREVIEW_NOTICE_VERSION = '0.1.0-website-1'.freeze
+    PREVIEW_NOTICE = <<~TEXT.freeze
+      ArchFlow Studio Developer Preview
+      开发者：OHDESIGN
+      小红书：@heikikun
+      官网：https://archflow.best
+
+      当前为未签名开发者预览版。
+      支持安装、检测和配置，但不同 CAD/SketchUp 版本的兼容性可能存在差异。
+      所有建筑、法规及施工输出必须由专业人员复核。
+    TEXT
+
+    def self.show_preview_notice_once
+      settings = 'ArchFlow Studio'
+      key = 'developer_preview_notice_version'
+      return if Sketchup.read_default(settings, key, '').to_s == PREVIEW_NOTICE_VERSION
+
+      UI.messagebox(PREVIEW_NOTICE)
+      Sketchup.write_default(settings, key, PREVIEW_NOTICE_VERSION)
+    rescue StandardError => error
+      puts("ArchFlow Bridge: preview notice failed: #{error.message}")
+    end
+
+    class LocalServer
+      def initialize
+        @server = nil
+        @timer = nil
+        @running = false
+      end
+
+      def start
+        return if @running
+        @server = TCPServer.new(HOST, PORT)
+        @running = true
+        @timer = UI.start_timer(0.1, true) { poll }
+        log("listening on #{HOST}:#{PORT}")
+      rescue StandardError => error
+        stop
+        log("start failed: #{error.message}")
+      end
+
+      def stop
+        @running = false
+        UI.stop_timer(@timer) if @timer
+        @timer = nil
+        @server.close if @server && !@server.closed?
+        @server = nil
+      rescue StandardError => error
+        log("stop failed: #{error.message}")
+      end
+
+      def running?
+        @running
+      end
+
+      private
+
+      def log(message)
+        puts("ArchFlow Bridge: #{message}")
+      end
+
+      def poll
+        return unless @running && @server
+        ready = IO.select([@server], nil, nil, 0)
+        return unless ready
+        client = @server.accept_nonblock
+        line = client.gets(MAX_REQUEST_BYTES + 1)
+        raise 'request exceeded 8 MiB' if line && line.bytesize > MAX_REQUEST_BYTES
+        request = JSON.parse(line || '')
+        response = dispatch(request)
+        client.write(JSON.generate(response) + "\n")
+      rescue IO::WaitReadable
+        nil
+      rescue StandardError => error
+        begin
+          client.write(JSON.generate({ ok: false, error: error.message }) + "\n") if client
+        rescue StandardError
+          nil
+        end
+        log("request failed: #{error.message}")
+      ensure
+        client.close if client && !client.closed?
+      end
+
+      def dispatch(request)
+        raise 'unsupported bridge protocol' unless request['protocol'] == PROTOCOL
+        raise 'bridge authentication failed' unless secure_equal(request['token'].to_s, bridge_token)
+        params = request['params'].is_a?(Hash) ? request['params'] : {}
+        result = case request['action']
+                 when 'ping' then ping
+                 when 'get_scene_info' then get_scene_info
+                 when 'get_selection' then get_selection
+                 when 'create_box' then create_box(params)
+                 when 'transform_entity' then transform_entity(params)
+                 when 'set_material' then set_material(params)
+                 when 'delete_entity' then delete_entity(params)
+                 when 'export_scene' then export_scene(params)
+                 when 'run_archflow_script' then run_archflow_script(params)
+                 else raise "unknown action: #{request['action']}"
+                 end
+        { ok: true, protocol: PROTOCOL, result: result }
+      end
+
+      def token_file
+        root = ENV['LOCALAPPDATA'] || File.join(Dir.home, '.archflow')
+        File.join(root, 'ArchFlow', 'bridge-token')
+      end
+
+      def bridge_token
+        path = token_file
+        if File.exist?(path)
+          value = File.read(path, encoding: 'UTF-8').strip
+          return value if value.length >= 32
+        end
+        FileUtils.mkdir_p(File.dirname(path))
+        value = SecureRandom.hex(32)
+        File.write(path, value, mode: 'w', encoding: 'UTF-8')
+        value
+      end
+
+      def secure_equal(left, right)
+        return false unless left.bytesize == right.bytesize && !left.empty?
+        mismatch = 0
+        left.bytes.zip(right.bytes) { |a, b| mismatch |= a ^ b }
+        mismatch.zero?
+      end
+
+      def model
+        Sketchup.active_model || raise('no active SketchUp model')
+      end
+
+      def mm(value)
+        Float(value) / 25.4
+      rescue ArgumentError, TypeError
+        raise 'expected a numeric millimetre value'
+      end
+
+      def vector(value, name, positive: false)
+        raise "#{name} must contain exactly three values" unless value.is_a?(Array) && value.length == 3
+        numbers = value.map { |item| Float(item) }
+        raise "#{name} values must be positive" if positive && numbers.any? { |item| item <= 0 }
+        numbers
+      rescue ArgumentError, TypeError
+        raise "#{name} must contain numeric values"
+      end
+
+      def persistent_id(entity)
+        entity.respond_to?(:persistent_id) ? entity.persistent_id : entity.entityID
+      end
+
+      def find_entity(identifier)
+        id = Integer(identifier)
+        found = model.find_entity_by_persistent_id(id) if model.respond_to?(:find_entity_by_persistent_id)
+        found ||= model.find_entity_by_id(id) if model.respond_to?(:find_entity_by_id)
+        found || raise("entity not found: #{id}")
+      rescue ArgumentError, TypeError
+        raise 'entity_id must be an integer'
+      end
+
+      def entity_summary(entity)
+        bounds = entity.respond_to?(:bounds) ? entity.bounds : nil
+        {
+          id: persistent_id(entity),
+          type: entity.typename,
+          name: entity.respond_to?(:name) ? entity.name.to_s : '',
+          tag: entity.respond_to?(:layer) && entity.layer ? entity.layer.name : nil,
+          bounds_mm: bounds ? {
+            min: [bounds.min.x, bounds.min.y, bounds.min.z].map { |v| (v.to_f * 25.4).round(3) },
+            max: [bounds.max.x, bounds.max.y, bounds.max.z].map { |v| (v.to_f * 25.4).round(3) }
+          } : nil
+        }
+      end
+
+      def ping
+        { bridge: 'ArchFlow Bridge', version: '0.1.0', official_website: OFFICIAL_WEBSITE, sketchup_version: Sketchup.version, model_open: !Sketchup.active_model.nil? }
+      end
+
+      def get_scene_info
+        current = model
+        counts = Hash.new(0)
+        current.entities.each { |entity| counts[entity.typename] += 1 }
+        units = current.options['UnitsOptions']
+        {
+          title: current.title,
+          path: current.path,
+          modified: current.modified?,
+          length_unit: units ? units['LengthUnit'] : nil,
+          top_level_entity_count: current.entities.length,
+          top_level_entity_types: counts,
+          selection_count: current.selection.length,
+          tags: current.layers.map(&:name),
+          materials: current.materials.map(&:display_name)
+        }
+      end
+
+      def get_selection
+        { entities: model.selection.map { |entity| entity_summary(entity) } }
+      end
+
+      def operation(name)
+        current = model
+        current.start_operation(name, true)
+        result = yield(current)
+        current.commit_operation
+        result
+      rescue StandardError
+        current.abort_operation if current
+        raise
+      end
+
+      def create_box(params)
+        position = vector(params['position_mm'], 'position_mm').map { |v| mm(v) }
+        dimensions = vector(params['dimensions_mm'], 'dimensions_mm', positive: true).map { |v| mm(v) }
+        name = params['name'].to_s.strip
+        raise 'name is required' if name.empty?
+        operation('ArchFlow Create Box') do |current|
+          group = current.active_entities.add_group
+          group.name = name
+          x, y, z = position
+          width, depth, height = dimensions
+          face = group.entities.add_face([x, y, z], [x + width, y, z], [x + width, y + depth, z], [x, y + depth, z])
+          raise 'failed to create box base face' unless face
+          face.reverse! if face.normal.z < 0
+          face.pushpull(height)
+          tag_name = params['tag'].to_s.strip
+          group.layer = current.layers[tag_name] || current.layers.add(tag_name) unless tag_name.empty?
+          entity_summary(group)
+        end
+      end
+
+      def transform_entity(params)
+        entity = find_entity(params['entity_id'])
+        operation('ArchFlow Transform Entity') do
+          if params['translation_mm']
+            values = vector(params['translation_mm'], 'translation_mm').map { |v| mm(v) }
+            entity.transform!(Geom::Transformation.translation(values))
+          end
+          if params['rotation_deg']
+            values = vector(params['rotation_deg'], 'rotation_deg')
+            axes = [Geom::Vector3d.new(1, 0, 0), Geom::Vector3d.new(0, 1, 0), Geom::Vector3d.new(0, 0, 1)]
+            values.each_with_index do |degrees, index|
+              next if degrees.zero?
+              entity.transform!(Geom::Transformation.rotation(entity.bounds.center, axes[index], degrees * Math::PI / 180.0))
+            end
+          end
+          if params['scale']
+            values = vector(params['scale'], 'scale', positive: true)
+            entity.transform!(Geom::Transformation.scaling(entity.bounds.center, *values))
+          end
+          entity_summary(entity)
+        end
+      end
+
+      def set_material(params)
+        entity = find_entity(params['entity_id'])
+        name = params['material_name'].to_s.strip
+        color = params['color'].to_s
+        raise 'material_name is required' if name.empty?
+        raise 'color must use #RRGGBB' unless color.match?(/^#[0-9a-fA-F]{6}$/)
+        operation('ArchFlow Set Material') do |current|
+          material = current.materials[name] || current.materials.add(name)
+          material.color = Sketchup::Color.new(color[1, 2].to_i(16), color[3, 2].to_i(16), color[5, 2].to_i(16))
+          material.alpha = Float(params.fetch('opacity', 1.0))
+          entity.material = material
+          { entity: entity_summary(entity), material: material.display_name, color: color, opacity: material.alpha }
+        end
+      end
+
+      def delete_entity(params)
+        entity = find_entity(params['entity_id'])
+        summary = entity_summary(entity)
+        operation('ArchFlow Delete Entity') { entity.erase! }
+        summary
+      end
+
+      def export_scene(params)
+        path = File.expand_path(params['output_path'].to_s)
+        raise 'output_path is required' if params['output_path'].to_s.strip.empty?
+        FileUtils.mkdir_p(File.dirname(path))
+        success = File.extname(path).downcase == '.skp' ? model.save_copy(path) : model.export(path)
+        raise "SketchUp could not export #{path}" unless success
+        { output_path: path }
+      end
+
+      def run_archflow_script(params)
+        raise 'confirmed must be true' unless params['confirmed'] == true
+        path = File.expand_path(params['script_path'].to_s)
+        raise 'script_path must reference an existing .rb file' unless File.file?(path) && File.extname(path).downcase == '.rb'
+        content = File.binread(path)
+        first_line = content.lines.first.to_s.force_encoding('UTF-8')
+        raise 'script is not marked as generated by ArchFlow Studio' unless first_line.start_with?('# Generated by ArchFlow Studio.')
+        actual = Digest::SHA256.hexdigest(content)
+        raise 'script SHA-256 does not match' unless secure_equal(actual.downcase, params['sha256'].to_s.downcase)
+        Sketchup.load(path)
+        { script_path: path, sha256: actual }
+      end
+    end
+
+    unless file_loaded?(__FILE__)
+      SERVER = LocalServer.new
+      menu = UI.menu('Extensions').add_submenu('ArchFlow Bridge')
+      menu.add_item('Start Local Bridge') { SERVER.start }
+      menu.add_item('Stop Local Bridge') { SERVER.stop }
+      UI.start_timer(0.0, false) { ArchFlow::Bridge.show_preview_notice_once }
+      UI.start_timer(1.0, false) { SERVER.start unless SERVER.running? }
+      file_loaded(__FILE__)
+    end
+  end
+end

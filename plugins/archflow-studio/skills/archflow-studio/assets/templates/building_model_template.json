@@ -1,0 +1,109 @@
+{
+  "schema_version": "1.0",
+  "units": "mm",
+  "project": {
+    "id": "HOUSE-MVP-001",
+    "title": "Two-storey detached house MVP",
+    "mode": "preliminary",
+    "use": "detached_house",
+    "jurisdiction": null,
+    "address_or_parcel": null,
+    "structure_intent": "rc",
+    "area_basis": "sum_of_space_polygons"
+  },
+  "legal_constraints": {
+    "sources": [],
+    "building_coverage_max_percent": 60,
+    "floor_area_ratio_max_percent": 200,
+    "max_height_mm": 10000,
+    "uniform_setback_mm": 500,
+    "constraint_source_ids": []
+  },
+  "site": {
+    "source_file": null,
+    "source_revision": null,
+    "coordinate_system": null,
+    "north_degrees": 0,
+    "boundary": [[0, 0], [20000, 0], [20000, 15000], [0, 15000]],
+    "roads": [
+      {"id": "ROAD-001", "edge": [[0, 0], [20000, 0]], "width_mm": 4000, "status": "unverified"}
+    ]
+  },
+  "storeys": [
+    {
+      "id": "1F",
+      "name": "1F",
+      "z_mm": 0,
+      "height_mm": 3200,
+      "spaces": [
+        {"id": "SP-1F-LDK", "name": "LDK", "usage": "living", "polygon": [[2500, 3000], [8500, 3000], [8500, 11000], [2500, 11000]], "material": "living", "color": "#F2D16B"},
+        {"id": "SP-1F-SERVICE", "name": "Service", "usage": "service", "polygon": [[8500, 3000], [12500, 3000], [12500, 11000], [8500, 11000]], "material": "service", "color": "#9CC5E8"}
+      ],
+      "slabs": [
+        {"id": "SLAB-1F-001", "polygon": [[2500, 3000], [12500, 3000], [12500, 11000], [2500, 11000]], "thickness_mm": 180, "base_offset_mm": -180, "material": "rc"}
+      ],
+      "walls": [
+        {"id": "W-1F-S", "type": "external", "axis": [[2500, 3000], [12500, 3000]], "thickness_mm": 180, "height_mm": 3200, "base_offset_mm": 0, "material": "rc"},
+        {"id": "W-1F-E", "type": "external", "axis": [[12500, 3000], [12500, 11000]], "thickness_mm": 180, "height_mm": 3200, "base_offset_mm": 0, "material": "rc"},
+        {"id": "W-1F-N", "type": "external", "axis": [[12500, 11000], [2500, 11000]], "thickness_mm": 180, "height_mm": 3200, "base_offset_mm": 0, "material": "rc"},
+        {"id": "W-1F-W", "type": "external", "axis": [[2500, 11000], [2500, 3000]], "thickness_mm": 180, "height_mm": 3200, "base_offset_mm": 0, "material": "rc"},
+        {"id": "W-1F-I1", "type": "internal", "axis": [[8500, 3000], [8500, 11000]], "thickness_mm": 120, "height_mm": 3000, "base_offset_mm": 0, "material": "gypsum"}
+      ],
+      "openings": [
+        {"id": "D-1F-ENTRY", "type": "door", "host_wall_id": "W-1F-S", "offset_mm": 7600, "width_mm": 1000, "height_mm": 2200, "sill_mm": 0, "material": "wood"},
+        {"id": "WIN-1F-LDK-S", "type": "window", "host_wall_id": "W-1F-S", "offset_mm": 1800, "width_mm": 2400, "height_mm": 1400, "sill_mm": 800, "material": "glass"},
+        {"id": "D-1F-I1", "type": "door", "host_wall_id": "W-1F-I1", "offset_mm": 1200, "width_mm": 900, "height_mm": 2100, "sill_mm": 0, "material": "wood"},
+        {"id": "WIN-1F-N", "type": "window", "host_wall_id": "W-1F-N", "offset_mm": 2500, "width_mm": 3000, "height_mm": 1400, "sill_mm": 800, "material": "glass"}
+      ],
+      "columns": [
+        {"id": "C-1F-01", "center": [2700, 3200], "width_mm": 400, "depth_mm": 400, "height_mm": 3200, "base_offset_mm": 0, "material": "rc"},
+        {"id": "C-1F-02", "center": [12300, 3200], "width_mm": 400, "depth_mm": 400, "height_mm": 3200, "base_offset_mm": 0, "material": "rc"},
+        {"id": "C-1F-03", "center": [12300, 10800], "width_mm": 400, "depth_mm": 400, "height_mm": 3200, "base_offset_mm": 0, "material": "rc"},
+        {"id": "C-1F-04", "center": [2700, 10800], "width_mm": 400, "depth_mm": 400, "height_mm": 3200, "base_offset_mm": 0, "material": "rc"}
+      ],
+      "beams": [
+        {"id": "B-1F-S", "axis": [[2700, 3200], [12300, 3200]], "width_mm": 300, "depth_mm": 500, "base_offset_mm": 2700, "material": "rc"},
+        {"id": "B-1F-N", "axis": [[12300, 10800], [2700, 10800]], "width_mm": 300, "depth_mm": 500, "base_offset_mm": 2700, "material": "rc"}
+      ]
+    },
+    {
+      "id": "2F",
+      "name": "2F",
+      "z_mm": 3200,
+      "height_mm": 3200,
+      "spaces": [
+        {"id": "SP-2F-BED1", "name": "Bedroom 1", "usage": "bedroom", "polygon": [[2500, 3000], [7500, 3000], [7500, 7000], [2500, 7000]], "material": "bedroom", "color": "#A8D5BA"},
+        {"id": "SP-2F-BED2", "name": "Bedroom 2", "usage": "bedroom", "polygon": [[7500, 3000], [12500, 3000], [12500, 7000], [7500, 7000]], "material": "bedroom", "color": "#A8D5BA"},
+        {"id": "SP-2F-HALL", "name": "Hall", "usage": "circulation", "polygon": [[2500, 7000], [12500, 7000], [12500, 11000], [2500, 11000]], "material": "circulation", "color": "#D7C5E8"}
+      ],
+      "slabs": [
+        {"id": "SLAB-2F-001", "polygon": [[2500, 3000], [12500, 3000], [12500, 11000], [2500, 11000]], "thickness_mm": 180, "base_offset_mm": -180, "material": "rc"}
+      ],
+      "walls": [
+        {"id": "W-2F-S", "type": "external", "axis": [[2500, 3000], [12500, 3000]], "thickness_mm": 180, "height_mm": 3200, "base_offset_mm": 0, "material": "rc"},
+        {"id": "W-2F-E", "type": "external", "axis": [[12500, 3000], [12500, 11000]], "thickness_mm": 180, "height_mm": 3200, "base_offset_mm": 0, "material": "rc"},
+        {"id": "W-2F-N", "type": "external", "axis": [[12500, 11000], [2500, 11000]], "thickness_mm": 180, "height_mm": 3200, "base_offset_mm": 0, "material": "rc"},
+        {"id": "W-2F-W", "type": "external", "axis": [[2500, 11000], [2500, 3000]], "thickness_mm": 180, "height_mm": 3200, "base_offset_mm": 0, "material": "rc"},
+        {"id": "W-2F-I1", "type": "internal", "axis": [[7500, 3000], [7500, 7000]], "thickness_mm": 120, "height_mm": 3000, "base_offset_mm": 0, "material": "gypsum"},
+        {"id": "W-2F-I2", "type": "internal", "axis": [[2500, 7000], [12500, 7000]], "thickness_mm": 120, "height_mm": 3000, "base_offset_mm": 0, "material": "gypsum"}
+      ],
+      "openings": [
+        {"id": "WIN-2F-S1", "type": "window", "host_wall_id": "W-2F-S", "offset_mm": 1800, "width_mm": 1800, "height_mm": 1400, "sill_mm": 800, "material": "glass"},
+        {"id": "WIN-2F-S2", "type": "window", "host_wall_id": "W-2F-S", "offset_mm": 6800, "width_mm": 1800, "height_mm": 1400, "sill_mm": 800, "material": "glass"},
+        {"id": "D-2F-I1", "type": "door", "host_wall_id": "W-2F-I1", "offset_mm": 800, "width_mm": 900, "height_mm": 2100, "sill_mm": 0, "material": "wood"},
+        {"id": "D-2F-I2A", "type": "door", "host_wall_id": "W-2F-I2", "offset_mm": 1500, "width_mm": 900, "height_mm": 2100, "sill_mm": 0, "material": "wood"},
+        {"id": "D-2F-I2B", "type": "door", "host_wall_id": "W-2F-I2", "offset_mm": 6500, "width_mm": 900, "height_mm": 2100, "sill_mm": 0, "material": "wood"}
+      ],
+      "columns": [],
+      "beams": []
+    }
+  ],
+  "assumptions": [
+    "Template geometry is illustrative and must be replaced with project evidence.",
+    "Member sizes are modeling placeholders, not structural design."
+  ],
+  "unresolved": [
+    "Jurisdiction and official legal sources are not supplied.",
+    "Site survey, levels, geotechnical data, fire, accessibility, and MEP criteria are not supplied."
+  ]
+}

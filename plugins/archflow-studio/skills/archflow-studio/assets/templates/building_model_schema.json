@@ -1,0 +1,172 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://archflow.best/schemas/building-model-1.0.json",
+  "title": "Architectural semantic building model MVP",
+  "type": "object",
+  "required": ["schema_version", "units", "project", "site", "storeys"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "units": {"const": "mm"},
+    "project": {
+      "type": "object",
+      "required": ["id", "title", "mode", "use"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "title": {"type": "string", "minLength": 1},
+        "mode": {"enum": ["concept", "preliminary", "construction_assistance"]},
+        "use": {"type": "string", "minLength": 1},
+        "jurisdiction": {"type": ["string", "null"]},
+        "address_or_parcel": {"type": ["string", "null"]},
+        "structure_intent": {"type": ["string", "null"]},
+        "area_basis": {"type": "string"}
+      }
+    },
+    "legal_constraints": {
+      "type": "object",
+      "properties": {
+        "sources": {"type": "array", "items": {"$ref": "#/$defs/source"}},
+        "building_coverage_max_percent": {"type": ["number", "null"], "minimum": 0},
+        "floor_area_ratio_max_percent": {"type": ["number", "null"], "minimum": 0},
+        "max_height_mm": {"type": ["number", "null"], "exclusiveMinimum": 0},
+        "uniform_setback_mm": {"type": ["number", "null"], "minimum": 0},
+        "constraint_source_ids": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "site": {
+      "type": "object",
+      "required": ["boundary"],
+      "properties": {
+        "source_file": {"type": ["string", "null"]},
+        "source_revision": {"type": ["string", "null"]},
+        "coordinate_system": {"type": ["string", "null"]},
+        "north_degrees": {"type": ["number", "null"]},
+        "boundary": {"$ref": "#/$defs/polygon"},
+        "roads": {"type": "array", "items": {"type": "object"}}
+      }
+    },
+    "storeys": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/storey"}
+    },
+    "assumptions": {"type": "array", "items": {"type": "string"}},
+    "unresolved": {"type": "array", "items": {"type": "string"}}
+  },
+  "$defs": {
+    "point2": {
+      "type": "array",
+      "prefixItems": [{"type": "number"}, {"type": "number"}],
+      "items": false,
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "polygon": {
+      "type": "array",
+      "minItems": 3,
+      "items": {"$ref": "#/$defs/point2"}
+    },
+    "source": {
+      "type": "object",
+      "required": ["id", "authority", "title", "version", "locator", "url_or_file"],
+      "properties": {
+        "id": {"type": "string"},
+        "authority": {"type": "string"},
+        "title": {"type": "string"},
+        "version": {"type": "string"},
+        "locator": {"type": "string"},
+        "url_or_file": {"type": "string"}
+      }
+    },
+    "space": {
+      "type": "object",
+      "required": ["id", "name", "usage", "polygon"],
+      "properties": {
+        "id": {"type": "string"},
+        "name": {"type": "string"},
+        "usage": {"type": "string"},
+        "polygon": {"$ref": "#/$defs/polygon"},
+        "material": {"type": "string"},
+        "color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"}
+      }
+    },
+    "slab": {
+      "type": "object",
+      "required": ["id", "polygon", "thickness_mm", "material"],
+      "properties": {
+        "id": {"type": "string"},
+        "polygon": {"$ref": "#/$defs/polygon"},
+        "thickness_mm": {"type": "number", "exclusiveMinimum": 0},
+        "base_offset_mm": {"type": "number"},
+        "material": {"type": "string"}
+      }
+    },
+    "wall": {
+      "type": "object",
+      "required": ["id", "type", "axis", "thickness_mm", "height_mm", "material"],
+      "properties": {
+        "id": {"type": "string"},
+        "type": {"enum": ["external", "internal"]},
+        "axis": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"$ref": "#/$defs/point2"}},
+        "thickness_mm": {"type": "number", "exclusiveMinimum": 0},
+        "height_mm": {"type": "number", "exclusiveMinimum": 0},
+        "base_offset_mm": {"type": "number"},
+        "material": {"type": "string"}
+      }
+    },
+    "opening": {
+      "type": "object",
+      "required": ["id", "type", "host_wall_id", "offset_mm", "width_mm", "height_mm", "sill_mm"],
+      "properties": {
+        "id": {"type": "string"},
+        "type": {"enum": ["door", "window"]},
+        "host_wall_id": {"type": "string"},
+        "offset_mm": {"type": "number", "minimum": 0},
+        "width_mm": {"type": "number", "exclusiveMinimum": 0},
+        "height_mm": {"type": "number", "exclusiveMinimum": 0},
+        "sill_mm": {"type": "number", "minimum": 0},
+        "material": {"type": "string"}
+      }
+    },
+    "column": {
+      "type": "object",
+      "required": ["id", "center", "width_mm", "depth_mm", "height_mm", "material"],
+      "properties": {
+        "id": {"type": "string"},
+        "center": {"$ref": "#/$defs/point2"},
+        "width_mm": {"type": "number", "exclusiveMinimum": 0},
+        "depth_mm": {"type": "number", "exclusiveMinimum": 0},
+        "height_mm": {"type": "number", "exclusiveMinimum": 0},
+        "base_offset_mm": {"type": "number"},
+        "material": {"type": "string"}
+      }
+    },
+    "beam": {
+      "type": "object",
+      "required": ["id", "axis", "width_mm", "depth_mm", "base_offset_mm", "material"],
+      "properties": {
+        "id": {"type": "string"},
+        "axis": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"$ref": "#/$defs/point2"}},
+        "width_mm": {"type": "number", "exclusiveMinimum": 0},
+        "depth_mm": {"type": "number", "exclusiveMinimum": 0},
+        "base_offset_mm": {"type": "number"},
+        "material": {"type": "string"}
+      }
+    },
+    "storey": {
+      "type": "object",
+      "required": ["id", "name", "z_mm", "height_mm", "spaces", "slabs", "walls", "openings"],
+      "properties": {
+        "id": {"type": "string"},
+        "name": {"type": "string"},
+        "z_mm": {"type": "number"},
+        "height_mm": {"type": "number", "exclusiveMinimum": 0},
+        "spaces": {"type": "array", "items": {"$ref": "#/$defs/space"}},
+        "slabs": {"type": "array", "items": {"$ref": "#/$defs/slab"}},
+        "walls": {"type": "array", "items": {"$ref": "#/$defs/wall"}},
+        "openings": {"type": "array", "items": {"$ref": "#/$defs/opening"}},
+        "columns": {"type": "array", "items": {"$ref": "#/$defs/column"}},
+        "beams": {"type": "array", "items": {"$ref": "#/$defs/beam"}}
+      }
+    }
+  }
+}

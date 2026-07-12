@@ -1,0 +1,1 @@
+Check whether SketchUp MCP is available. List the currently available SketchUp MCP tools, then read the current SketchUp selection with get_selection. Do not create, modify, or delete any model objects.

@@ -1,0 +1,27 @@
+{
+  "schema_version": "0.1",
+  "require_no_validation_errors": true,
+  "require_no_failed_checks": true,
+  "require_verified_legal_checks": false,
+  "objectives": [
+    {
+      "id": "target-floor-area",
+      "metric": "gross_floor_area_m2",
+      "direction": "target",
+      "target": 100.0,
+      "weight": 1.0
+    },
+    {
+      "id": "compact-footprint",
+      "metric": "footprint_area_m2",
+      "direction": "minimize",
+      "weight": 0.25
+    }
+  ],
+  "human_review_objectives": [
+    "spatial quality and adjacency",
+    "daylight and views",
+    "constructability and cost",
+    "facade and rendering quality"
+  ]
+}

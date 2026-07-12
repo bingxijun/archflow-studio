@@ -1,0 +1,13 @@
+{
+  "rc": {"hex": "#B8B8B8", "render": "fair-face reinforced concrete"},
+  "wood": {"hex": "#B7804C", "render": "warm natural timber"},
+  "glass": {"hex": "#86C5DA", "render": "clear low-iron architectural glass"},
+  "metal": {"hex": "#60666D", "render": "dark powder-coated metal"},
+  "gypsum": {"hex": "#E8E4DC", "render": "warm white painted gypsum board"},
+  "living": {"hex": "#F2D16B", "render": "warm wood floor living zone"},
+  "kitchen": {"hex": "#E78B64", "render": "durable kitchen finish zone"},
+  "bedroom": {"hex": "#A8D5BA", "render": "quiet warm bedroom finish zone"},
+  "service": {"hex": "#9CC5E8", "render": "water-resistant service zone"},
+  "circulation": {"hex": "#D7C5E8", "render": "neutral circulation finish zone"},
+  "default": {"hex": "#D9D9D9", "render": "neutral architectural finish"}
+}

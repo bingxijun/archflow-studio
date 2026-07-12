@@ -1,0 +1,33 @@
+project:
+  id: PROJECT-001
+  title: Untitled project
+  mode: preliminary
+  jurisdiction: null
+  address_or_parcel: null
+  use: detached_house
+  structure_intent: null
+  floors: 2
+  target_floor_area_m2: null
+  area_basis: sum_of_space_polygons
+site_source:
+  file: null
+  revision: null
+  unit: mm
+  origin: preserve_source
+  coordinate_system: null
+  north_degrees: null
+design_constraints:
+  bedrooms: null
+  parking_spaces: null
+  barrier_free: null
+  roof_type: null
+  style: null
+legal_constraints:
+  sources: []
+  building_coverage_max_percent: null
+  floor_area_ratio_max_percent: null
+  max_height_mm: null
+  uniform_setback_mm: null
+  constraint_source_ids: []
+assumptions: []
+unresolved: []

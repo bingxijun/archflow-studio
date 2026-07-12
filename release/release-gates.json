@@ -1,0 +1,16 @@
+{
+  "schema_version": "0.1",
+  "product_version": "0.1.0-dev.1+codex.20260712095925",
+  "gates": [
+    {"id": "codex-plugin", "status": "PASS", "required_for": ["developer-preview", "production"], "evidence": "Plugin and Skill validators pass."},
+    {"id": "installer-lifecycle", "status": "PASS", "required_for": ["developer-preview", "production"], "evidence": "Plan, install, repair, and uninstall smoke test passes in an isolated root."},
+    {"id": "sbom-checksums", "status": "PASS", "required_for": ["developer-preview", "production"], "evidence": "Release contains SPDX SBOM and SHA-256 inventory."},
+    {"id": "third-party-provenance", "status": "PASS", "required_for": ["production"], "evidence": "The bundled bridge is ArchFlow Apache-2.0 source and its reproducible source-to-binary hash is locked."},
+    {"id": "reproducible-signed-rbz", "status": "BLOCKED", "required_for": ["production"], "evidence": "Reproducible ArchFlow RBZ build passes; obtain and verify a SketchUp Extension Warehouse signature."},
+    {"id": "archflow-mcp-broker", "status": "PASS", "required_for": ["production"], "evidence": "Pure-standard-library ArchFlow MCP stdio server is declared through Plugin .mcp.json and tested against a mock local bridge."},
+    {"id": "native-rollback", "status": "BLOCKED", "required_for": ["production"], "evidence": "Track and reverse every CAD, SketchUp, and Codex configuration mutation."},
+    {"id": "authenticode", "status": "BLOCKED", "required_for": ["production"], "evidence": "Build and timestamp a signed MSI/EXE with a trusted publisher identity."},
+    {"id": "compatibility-matrix", "status": "BLOCKED", "required_for": ["production"], "evidence": "Pass clean-machine tests for every advertised CAD and SketchUp version."},
+    {"id": "public-policies", "status": "BLOCKED", "required_for": ["production"], "evidence": "Publish privacy, security, support, and responsible-use policies."}
+  ]
+}

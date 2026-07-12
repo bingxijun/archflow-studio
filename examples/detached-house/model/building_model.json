@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.0",
+  "units": "mm",
+  "project": {
+    "id": "EXAMPLE-001",
+    "title": "Detached house example",
+    "mode": "preliminary",
+    "use": "detached_house",
+    "jurisdiction": null,
+    "address_or_parcel": null,
+    "structure_intent": "unverified",
+    "area_basis": "sum_of_space_polygons"
+  },
+  "legal_constraints": {
+    "sources": [],
+    "constraint_source_ids": []
+  },
+  "site": {
+    "source_file": null,
+    "source_revision": null,
+    "coordinate_system": null,
+    "north_degrees": 0,
+    "boundary": [[0, 0], [20000, 0], [20000, 15000], [0, 15000]],
+    "roads": []
+  },
+  "storeys": [
+    {
+      "id": "1F",
+      "name": "1F",
+      "z_mm": 0,
+      "height_mm": 3200,
+      "spaces": [
+        {"id": "SP-1F-LIVING", "name": "Living", "usage": "living", "polygon": [[3000, 3500], [11000, 3500], [11000, 9500], [3000, 9500]], "material": "living", "color": "#F2D16B"}
+      ],
+      "slabs": [
+        {"id": "SLAB-1F", "polygon": [[3000, 3500], [11000, 3500], [11000, 9500], [3000, 9500]], "thickness_mm": 180, "base_offset_mm": -180, "material": "rc"}
+      ],
+      "walls": [
+        {"id": "W-1F-S", "type": "external", "axis": [[3000, 3500], [11000, 3500]], "thickness_mm": 180, "height_mm": 3200, "base_offset_mm": 0, "material": "rc"},
+        {"id": "W-1F-E", "type": "external", "axis": [[11000, 3500], [11000, 9500]], "thickness_mm": 180, "height_mm": 3200, "base_offset_mm": 0, "material": "rc"},
+        {"id": "W-1F-N", "type": "external", "axis": [[11000, 9500], [3000, 9500]], "thickness_mm": 180, "height_mm": 3200, "base_offset_mm": 0, "material": "rc"},
+        {"id": "W-1F-W", "type": "external", "axis": [[3000, 9500], [3000, 3500]], "thickness_mm": 180, "height_mm": 3200, "base_offset_mm": 0, "material": "rc"}
+      ],
+      "openings": [
+        {"id": "D-1F", "type": "door", "host_wall_id": "W-1F-S", "offset_mm": 5500, "width_mm": 1000, "height_mm": 2200, "sill_mm": 0, "material": "wood"},
+        {"id": "WIN-1F", "type": "window", "host_wall_id": "W-1F-N", "offset_mm": 2500, "width_mm": 2400, "height_mm": 1400, "sill_mm": 800, "material": "glass"}
+      ],
+      "columns": [],
+      "beams": []
+    },
+    {
+      "id": "2F",
+      "name": "2F",
+      "z_mm": 3200,
+      "height_mm": 3200,
+      "spaces": [
+        {"id": "SP-2F-BED", "name": "Bedroom", "usage": "bedroom", "polygon": [[3000, 3500], [11000, 3500], [11000, 9500], [3000, 9500]], "material": "bedroom", "color": "#A8D5BA"}
+      ],
+      "slabs": [
+        {"id": "SLAB-2F", "polygon": [[3000, 3500], [11000, 3500], [11000, 9500], [3000, 9500]], "thickness_mm": 180, "base_offset_mm": -180, "material": "rc"}
+      ],
+      "walls": [
+        {"id": "W-2F-S", "type": "external", "axis": [[3000, 3500], [11000, 3500]], "thickness_mm": 180, "height_mm": 3200, "base_offset_mm": 0, "material": "rc"},
+        {"id": "W-2F-E", "type": "external", "axis": [[11000, 3500], [11000, 9500]], "thickness_mm": 180, "height_mm": 3200, "base_offset_mm": 0, "material": "rc"},
+        {"id": "W-2F-N", "type": "external", "axis": [[11000, 9500], [3000, 9500]], "thickness_mm": 180, "height_mm": 3200, "base_offset_mm": 0, "material": "rc"},
+        {"id": "W-2F-W", "type": "external", "axis": [[3000, 9500], [3000, 3500]], "thickness_mm": 180, "height_mm": 3200, "base_offset_mm": 0, "material": "rc"}
+      ],
+      "openings": [
+        {"id": "WIN-2F", "type": "window", "host_wall_id": "W-2F-S", "offset_mm": 2800, "width_mm": 2400, "height_mm": 1400, "sill_mm": 800, "material": "glass"}
+      ],
+      "columns": [],
+      "beams": []
+    }
+  ],
+  "assumptions": ["Example geometry is illustrative."],
+  "unresolved": ["Jurisdiction, legal sources, survey, structure, fire, accessibility, MEP, and geotechnical inputs are missing."]
+}

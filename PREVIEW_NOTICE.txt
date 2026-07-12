@@ -1,0 +1,8 @@
+ArchFlow Studio Developer Preview
+开发者：OHDESIGN
+小红书：@heikikun
+官网：https://archflow.best
+
+当前为未签名开发者预览版。
+支持安装、检测和配置，但不同 CAD/SketchUp 版本的兼容性可能存在差异。
+所有建筑、法规及施工输出必须由专业人员复核。

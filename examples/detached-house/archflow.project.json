@@ -1,0 +1,21 @@
+{
+  "schema_version": "0.1",
+  "project": {
+    "id": "detached-house-example",
+    "title": "Detached house example",
+    "mode": "preliminary"
+  },
+  "inputs": {
+    "site_cad": null,
+    "requirements": "inputs/requirements.txt",
+    "legal_sources": []
+  },
+  "model": {
+    "building_model": "model/building_model.json"
+  },
+  "pipeline": {
+    "output_root": "outputs/runs",
+    "execute_sketchup": false,
+    "render_provider": "none"
+  }
+}

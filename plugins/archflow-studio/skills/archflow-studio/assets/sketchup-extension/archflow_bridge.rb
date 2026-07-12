@@ -1,0 +1,19 @@
+# SPDX-FileCopyrightText: 2026 OHDESIGN
+# SPDX-License-Identifier: Apache-2.0
+
+require 'sketchup.rb'
+require 'extensions.rb'
+
+module ArchFlow
+  module Bridge
+    unless file_loaded?(__FILE__)
+      extension = SketchupExtension.new('ArchFlow Bridge', 'archflow_bridge/main')
+      extension.description = 'ArchFlow Studio by OHDESIGN. Local, telemetry-free bridge between ArchFlow and SketchUp. Xiaohongshu: @heikikun. Official website: https://archflow.best'
+      extension.version = '0.1.0'
+      extension.creator = 'OHDESIGN'
+      extension.copyright = 'Copyright 2026 OHDESIGN'
+      Sketchup.register_extension(extension, true)
+      file_loaded(__FILE__)
+    end
+  end
+end

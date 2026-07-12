@@ -1,0 +1,21 @@
+Use the ArchFlow SketchUp Bridge to run one modeling smoke test in the currently open blank SketchUp model.
+
+Goal: create a simple one-story white massing model to verify stable MCP control of SketchUp.
+
+Rules:
+1. Do not simulate mouse or keyboard input.
+2. Prefer the structured `sketchup_create_box`, material, and transform tools.
+3. If structured tools are insufficient, generate an inspectable ArchFlow Ruby file, show its path and SHA-256, obtain explicit approval, then use `sketchup_run_archflow_script`; never use arbitrary Ruby evaluation.
+4. Interpret all dimensions as millimeters. The ArchFlow bridge performs the SketchUp inch conversion.
+5. Before creating geometry, clear only the current model entities if the user explicitly approves that cleanup.
+6. After creation, read back object names or model state to confirm the objects exist.
+
+Create named groups or components:
+- site_base: 12000 mm x 9000 mm x 100 mm, light gray.
+- building_mass: 7000 mm x 5000 mm x 3000 mm, white, on top of the base.
+- gable_roof: 7400 mm x 5400 mm dark gray gable roof, eaves around 3000 mm, ridge around 4200 mm.
+- window_south_01, window_south_02, window_south_03: three 1200 mm x 1200 mm blue translucent placeholder faces on the south side, sill at 900 mm.
+- door_east_01: 900 mm x 2100 mm dark placeholder face on the east side.
+- test_label: 3D text reading ArchFlow SketchUp Bridge Test.
+
+Windows and doors may be placeholder faces; real boolean openings are not required.

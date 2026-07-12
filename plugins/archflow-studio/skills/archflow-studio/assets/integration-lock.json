@@ -1,0 +1,15 @@
+{
+  "schema_version": "0.2",
+  "sketchup_bridge": {
+    "implementation": "ArchFlow-owned",
+    "protocol": "archflow-sketchup/1",
+    "license": "Apache-2.0",
+    "source": "assets/sketchup-extension"
+  },
+  "bundled_plugins": [
+    {
+      "file": "plugins/archflow_bridge.rbz",
+      "sha256": "767365BC7B938108C01BE9EBBDEDC75BDD6D92047CBB72B839DDC49E8E29333C"
+    }
+  ]
+}

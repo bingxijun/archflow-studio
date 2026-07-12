@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "archflow"
+version = "0.1.0.dev1"
+description = "Traceable orchestration for CAD, semantic building models, SketchUp, and rendering workflows"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "Apache-2.0"
+authors = [{name = "OHDESIGN"}]
+dependencies = []
+
+[project.urls]
+Homepage = "https://archflow.best"
+
+[project.scripts]
+archflow = "archflow.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

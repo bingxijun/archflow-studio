@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://archflow.best/schemas/archflow-project-0.1.json",
+  "title": "ArchFlow project manifest 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "project", "inputs", "model", "pipeline"],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "mode"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "title": {"type": "string", "minLength": 1},
+        "mode": {"enum": ["concept", "preliminary", "construction_assistance"]}
+      }
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["site_cad", "requirements", "legal_sources"],
+      "properties": {
+        "site_cad": {"type": ["string", "null"]},
+        "requirements": {"type": ["string", "null"]},
+        "legal_sources": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["building_model"],
+      "properties": {
+        "building_model": {"type": "string", "minLength": 1}
+      }
+    },
+    "pipeline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["output_root", "execute_sketchup", "render_provider"],
+      "properties": {
+        "output_root": {"type": "string", "minLength": 1},
+        "execute_sketchup": {"const": false},
+        "render_provider": {"const": "none"}
+      }
+    }
+  }
+}

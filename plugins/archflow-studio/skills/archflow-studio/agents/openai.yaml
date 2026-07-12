@@ -1,0 +1,7 @@
+interface:
+  display_name: "ArchFlow Studio"
+  short_description: "Configure CAD and automate sourced architectural workflows"
+  default_prompt: "Use $archflow-studio to inspect and safely configure my CAD/SketchUp tools, research official project rules, and build a traceable design workflow."
+
+policy:
+  allow_implicit_invocation: true

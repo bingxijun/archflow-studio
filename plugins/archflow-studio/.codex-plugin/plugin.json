@@ -1,0 +1,35 @@
+{
+  "name": "archflow-studio",
+  "version": "0.1.0-dev.1+codex.20260712095925",
+  "description": "Traceable architectural automation for CAD, SketchUp, official-source research, and design review. Official website: https://archflow.best",
+  "author": {
+    "name": "OHDESIGN"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "architecture",
+    "cad",
+    "sketchup",
+    "automation",
+    "aeco"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "ArchFlow Studio",
+    "shortDescription": "Connect CAD and SketchUp to a sourced design workflow.",
+    "longDescription": "Configure supported local design tools, inspect CAD evidence, research official regulations, build a semantic model, generate reviewable CAD and SketchUp artifacts, and compare immutable design runs. Official website: https://archflow.best",
+    "developerName": "OHDESIGN",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write",
+      "Automation"
+    ],
+    "defaultPrompt": [
+      "Inspect my CAD and SketchUp setup and show a safe configuration plan.",
+      "Research official project constraints and create a traceable design model.",
+      "Generate and compare reviewable CAD and SketchUp design runs."
+    ]
+  }
+}
