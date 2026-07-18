@@ -19,6 +19,17 @@
 
 Exit criterion: after installing the Plugin, Codex can discover the broker, call every read-only health tool, and produce a single evidence-backed system status without arbitrary shell or Ruby evaluation.
 
+## M0.7 — automated concept render handoff (implemented)
+
+- Automatically trigger the rendering route after SketchUp generation or any render/effect-image request.
+- Offer standard scenes, all standard scenes, or the user's current SketchUp camera as the render source.
+- Capture source PNGs through the authenticated ArchFlow Bridge instead of requiring manual screenshots.
+- Provide 13 original architectural visualization styles derived from official platform prompting principles.
+- Prepare hashed image-edit jobs with high input fidelity, strict geometry locks, negative prompts, and concept-only review labels.
+- Immediately use an exposed Codex image generation/edit tool after the user selects view and style; record provider unavailability honestly when no tool exists.
+
+Exit criterion: one view/style selection produces a captured source image and traceable render job without another confirmation or manual screenshot.
+
 ## M1 — real site ingestion
 
 - Export active DWG context through `codex-cad` without changing the drawing.
@@ -55,7 +66,7 @@ Exit criterion: execution failures are detected and reported; no operation claim
 
 ## M5 — rendering and product UX
 
-- Provider-neutral render job manifest with prompt, seed/model, source view, consent, cost, and output hash.
+- Add direct provider adapters with consent, cost, seed/model, retry, output hash, and reproducibility metadata beyond the current Codex image-tool handoff.
 - Local-first desktop UI for project intake, evidence review, model diff, approval gates, and run history.
 - Plugin/adapter SDK, sample projects, CI matrix, signed releases, and contributor governance.
 

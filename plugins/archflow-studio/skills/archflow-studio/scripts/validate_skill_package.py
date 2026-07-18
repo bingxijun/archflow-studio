@@ -22,6 +22,7 @@ REQUIRED_FILES = [
     "scripts/archflow_cli.py",
     "scripts/legal_evidence.py",
     "scripts/design_optimizer.py",
+    "scripts/render_workflow.py",
     "scripts/cad-cli.ps1",
     "scripts/CadBridge.psm1",
     "assets/codex_cad_bridge.lsp",
@@ -30,6 +31,7 @@ REQUIRED_FILES = [
     "assets/sketchup-extension/archflow_bridge/main.rb",
     "assets/templates/building_model_schema.json",
     "assets/templates/optimization_objectives.json",
+    "assets/templates/render_style_catalog.json",
     "references/workstation-setup.md",
     "references/legal-research.md",
     "references/deployment.md",
@@ -77,6 +79,22 @@ def validate_rbz(path: Path) -> None:
     ok(f"RBZ layout valid: {path.name}")
 
 
+def validate_render_catalog(path: Path) -> None:
+    catalog = json.loads(path.read_text(encoding="utf-8"))
+    styles = catalog.get("styles", [])
+    if len(styles) < 10:
+        fail("Render style catalog must contain at least 10 architectural styles")
+    identifiers = [item.get("id") for item in styles]
+    if any(not item for item in identifiers) or len(identifiers) != len(set(identifiers)):
+        fail("Render style IDs must be unique and non-empty")
+    for item in styles:
+        if not item.get("label_zh") or not item.get("summary_zh") or not item.get("prompt"):
+            fail(f"Render style is incomplete: {item.get('id')}")
+    if not catalog.get("geometry_lock") or not catalog.get("base_negative_prompt"):
+        fail("Render style catalog is missing geometry safeguards")
+    ok(f"Render style catalog valid: {len(styles)} styles")
+
+
 def sha256(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as handle:
@@ -98,6 +116,7 @@ def main() -> int:
     ok("Required file set is present")
 
     validate_frontmatter(root / "SKILL.md")
+    validate_render_catalog(root / "assets" / "templates" / "render_style_catalog.json")
 
     rbz_dir = root / "assets" / "plugins"
     rbz_files = sorted(rbz_dir.glob("*.rbz"))

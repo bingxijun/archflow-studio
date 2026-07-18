@@ -4,6 +4,7 @@ __pycache__/
 .venv/
 dist/
 build/
+distributions/xiaohongshu/archflow-xiaohongshu.zip
 *.egg-info/
 outputs/
 output/

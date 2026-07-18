@@ -9,7 +9,7 @@
   "bundled_plugins": [
     {
       "file": "plugins/archflow_bridge.rbz",
-      "sha256": "767365BC7B938108C01BE9EBBDEDC75BDD6D92047CBB72B839DDC49E8E29333C"
+      "sha256": "6D8FF11E8DEBF69CB2D3CC624303753CE53465DEA6A31A12E21FAB565F259248"
     }
   ]
 }

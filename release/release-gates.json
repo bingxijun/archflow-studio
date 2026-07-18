@@ -1,6 +1,6 @@
 {
   "schema_version": "0.1",
-  "product_version": "0.1.0-dev.1+codex.20260712095925",
+  "product_version": "0.2.0-dev.1+codex.20260712222909",
   "gates": [
     {"id": "codex-plugin", "status": "PASS", "required_for": ["developer-preview", "production"], "evidence": "Plugin and Skill validators pass."},
     {"id": "installer-lifecycle", "status": "PASS", "required_for": ["developer-preview", "production"], "evidence": "Plan, install, repair, and uninstall smoke test passes in an isolated root."},

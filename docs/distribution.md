@@ -2,10 +2,13 @@
 
 Official website: https://archflow.best
 
-ArchFlow uses one open-source repository with two deliverables:
+ArchFlow uses one open-source repository with three deliverables:
 
 - Codex Plugin: `plugins/archflow-studio`, containing the reusable Skill and local adapters.
 - Windows companion installer: `installer/windows`, responsible for detection, backup, registration, repair, and uninstall.
+- Xiaohongshu standalone Skill: `distributions/xiaohongshu/archflow`, containing the complete Skill resources, standalone MCP server source, explicit permission disclosure, upload validation, and a deterministic ZIP builder. It does not replace or modify the Codex Plugin deliverable.
+
+Build the Xiaohongshu upload ZIP with `python distributions/xiaohongshu/archflow/scripts/build_xhs_package.py`. The generated archive keeps `SKILL.md` at the ZIP root and enforces the platform's 10 MiB per-file and 30 MiB total source limits.
 
 Developer Preview packages are ZIP files produced by `installer/windows/build_release.ps1`. Each package includes the Plugin payload, setup script, Apache-2.0 license, third-party notices, SPDX SBOM, and SHA-256 file inventory.
 

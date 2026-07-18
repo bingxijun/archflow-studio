@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "archflow-sketchup": {
+      "title": "ArchFlow SketchUp Bridge",
+      "description": "Local, telemetry-free SketchUp control through the ArchFlow-owned bridge.",
+      "cwd": ".",
+      "command": "python",
+      "args": [
+        "./scripts/archflow_mcp_server.py"
+      ]
+    }
+  }
+}

@@ -21,7 +21,7 @@ class ProjectTests(unittest.TestCase):
                 "project": {"id": "p", "title": "P", "mode": "concept"},
                 "inputs": {"site_cad": None, "requirements": None, "legal_sources": []},
                 "model": {"building_model": "model.json"},
-                "pipeline": {"output_root": "outputs", "execute_sketchup": True},
+                "pipeline": {"output_root": "outputs", "execute_sketchup": True, "render_provider": "auto"},
             }
             issues = validate_manifest(manifest, root)
             self.assertIn("pipeline.execute_sketchup must remain false in manifest schema 0.1", issues)

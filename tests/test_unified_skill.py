@@ -134,6 +134,37 @@ class UnifiedSkillTests(unittest.TestCase):
             self.assertEqual(report["selected_quantitative_candidate"], "candidate")
             self.assertGreater(report["candidate_score"], 0)
 
+    def test_render_style_catalog_and_job_preserve_geometry(self):
+        catalog_path = SKILL / "assets" / "templates" / "render_style_catalog.json"
+        catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
+        self.assertGreaterEqual(len(catalog["styles"]), 10)
+        self.assertEqual(len({style["id"] for style in catalog["styles"]}), len(catalog["styles"]))
+        path = SKILL / "scripts" / "render_workflow.py"
+        spec = importlib.util.spec_from_file_location("render_workflow", path)
+        module = importlib.util.module_from_spec(spec)
+        assert spec.loader
+        spec.loader.exec_module(module)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "current.png"
+            source.write_bytes(b"\x89PNG\r\n\x1a\nArchFlow-test")
+            model = root / "building_model.json"
+            model.write_text(json.dumps({"project": {"id": "DEMO"}}), encoding="utf-8")
+            output = root / "render-job.json"
+            job = module.prepare_job(
+                source_image=source,
+                view="current",
+                style_name="黄昏",
+                output=output,
+                model_path=model,
+            )
+            self.assertEqual(job["style"]["id"], "golden-hour")
+            self.assertEqual(job["action"], "image_edit")
+            self.assertEqual(job["input_fidelity"], "high")
+            self.assertIn("Preserve exactly", job["prompt"])
+            self.assertIn("changed camera", job["negative_prompt"])
+            self.assertTrue(output.is_file())
+
 
 if __name__ == "__main__":
     unittest.main()

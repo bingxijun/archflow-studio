@@ -37,7 +37,7 @@ class PipelineTests(unittest.TestCase):
                 "project": {"id": "p", "title": "P", "mode": "concept"},
                 "inputs": {"site_cad": None, "requirements": None, "legal_sources": []},
                 "model": {"building_model": "model.json"},
-                "pipeline": {"output_root": "outputs", "execute_sketchup": False},
+                "pipeline": {"output_root": "outputs", "execute_sketchup": False, "render_provider": "auto"},
             }
             manifest_path = root / "archflow.project.json"
             manifest_path.write_text(json.dumps(manifest), encoding="utf-8")

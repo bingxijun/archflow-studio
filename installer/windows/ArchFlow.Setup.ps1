@@ -220,6 +220,6 @@ if ($Action -eq "Uninstall") {
         if ($resolvedBase -ne $expectedBase) { throw "-Purge is limited to the default ArchFlow install root." }
         if (Test-Path -LiteralPath $InstallBase) { Remove-Item -LiteralPath $InstallBase -Recurse -Force }
     }
-    Write-Host "Uninstall complete. Existing CAD/SketchUp adapter files are retained for safety in version 0.1."
+    Write-Host "Uninstall complete. Existing CAD/SketchUp adapter files are retained for safety in version 0.2."
     exit 0
 }

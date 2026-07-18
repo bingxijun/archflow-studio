@@ -1,7 +1,7 @@
 {
   "name": "archflow-studio",
-  "version": "0.1.0-dev.1+codex.20260712095925",
-  "description": "Traceable architectural automation for CAD, SketchUp, official-source research, and design review. Official website: https://archflow.best",
+  "version": "0.2.0-dev.1+codex.20260712222909",
+  "description": "Traceable CAD-to-SketchUp automation with official-source research, current-view capture, and geometry-preserving concept rendering. Official website: https://archflow.best",
   "author": {
     "name": "OHDESIGN"
   },
@@ -17,8 +17,8 @@
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "ArchFlow Studio",
-    "shortDescription": "Connect CAD and SketchUp to a sourced design workflow.",
-    "longDescription": "Configure supported local design tools, inspect CAD evidence, research official regulations, build a semantic model, generate reviewable CAD and SketchUp artifacts, and compare immutable design runs. Official website: https://archflow.best",
+    "shortDescription": "Automate sourced CAD, SketchUp, and concept rendering workflows.",
+    "longDescription": "Configure supported local design tools, inspect CAD evidence, research official regulations, build a semantic model, generate reviewable CAD and SketchUp artifacts, capture standard or current model views, and create geometry-preserving concept renders in a selected style. Official website: https://archflow.best",
     "developerName": "OHDESIGN",
     "category": "Productivity",
     "capabilities": [
@@ -30,6 +30,8 @@
       "Inspect my CAD and SketchUp setup and show a safe configuration plan.",
       "Research official project constraints and create a traceable design model.",
       "Generate and compare reviewable CAD and SketchUp design runs."
+      ,
+      "Render a selected standard or current SketchUp view in a chosen architectural style."
     ]
   }
 }

@@ -1,0 +1,14 @@
+{
+  "site_boundary": {"pattern": "SITE-BOUNDARY", "aci": 7},
+  "site_road": {"pattern": "SITE-ROAD", "aci": 8},
+  "legal_setback": {"pattern": "LEGAL-SETBACK", "aci": 1},
+  "external_wall": {"pattern": "A-WALL-EXT-{storey}", "aci": 7},
+  "internal_wall": {"pattern": "A-WALL-INT-{storey}", "aci": 8},
+  "slab": {"pattern": "A-SLAB-{storey}", "aci": 9},
+  "door": {"pattern": "A-OPEN-DOOR-{storey}", "aci": 2},
+  "window": {"pattern": "A-OPEN-WINDOW-{storey}", "aci": 4},
+  "zone": {"pattern": "A-ZONE-{usage}-{storey}", "aci": 3},
+  "column": {"pattern": "S-COLUMN-{storey}", "aci": 6},
+  "beam": {"pattern": "S-BEAM-{storey}", "aci": 5},
+  "annotation": {"pattern": "A-ANNO-{storey}", "aci": 7}
+}

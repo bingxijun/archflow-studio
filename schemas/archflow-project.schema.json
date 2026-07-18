@@ -42,7 +42,7 @@
       "properties": {
         "output_root": {"type": "string", "minLength": 1},
         "execute_sketchup": {"const": false},
-        "render_provider": {"const": "none"}
+        "render_provider": {"enum": ["auto", "codex-image-tool", "none"]}
       }
     }
   }

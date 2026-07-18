@@ -32,6 +32,7 @@ class ArchFlowMcpServerTests(unittest.TestCase):
         listed = MODULE.handle_request({"jsonrpc": "2.0", "id": 2, "method": "tools/list", "params": {}})
         names = {tool["name"] for tool in listed["result"]["tools"]}
         self.assertIn("sketchup_get_scene_info", names)
+        self.assertIn("sketchup_capture_view", names)
         self.assertIn("sketchup_run_archflow_script", names)
         self.assertNotIn("eval_ruby", names)
 
@@ -42,6 +43,18 @@ class ArchFlowMcpServerTests(unittest.TestCase):
         }, FakeClient())
         self.assertFalse(called["result"]["isError"])
         self.assertEqual(called["result"]["structuredContent"]["action"], "get_selection")
+
+    def test_capture_view_maps_to_owned_bridge_protocol(self):
+        called = MODULE.handle_request({
+            "jsonrpc": "2.0", "id": 4, "method": "tools/call",
+            "params": {
+                "name": "sketchup_capture_view",
+                "arguments": {"output_path": "C:/tmp/axon.png", "view": "axon"},
+            },
+        }, FakeClient())
+        self.assertFalse(called["result"]["isError"])
+        self.assertEqual(called["result"]["structuredContent"]["action"], "capture_view")
+        self.assertEqual(called["result"]["structuredContent"]["params"]["view"], "axon")
 
     def test_tcp_client_uses_local_token_and_protocol(self):
         with tempfile.TemporaryDirectory() as directory:

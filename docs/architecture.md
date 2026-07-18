@@ -20,7 +20,13 @@ requirements + site CAD + sourced constraints
                  verified line views
                         |
                         v
-                rendering provider
+          captured standard/current view
+                        |
+                        v
+              traceable render job
+                        |
+                        v
+          available Codex image-edit tool
 ```
 
 ## Components
@@ -29,6 +35,7 @@ requirements + site CAD + sourced constraints
 - `architectural-cad-to-sketchup`: semantic schema, deterministic validators and generators.
 - ArchFlow CAD bridge: read-only CAD context acquisition and explicitly authorized CAD mutation through installed COM APIs.
 - ArchFlow SketchUp bridge: bundled MCP stdio server, authenticated local TCP adapter, read-only health checks, and explicitly authorized model mutation.
+- ArchFlow render handoff: standard/current SketchUp view capture, source/model hashes, an original architectural style catalog, geometry locks, and provider-neutral image-edit job manifests.
 
 ## Project package
 
@@ -42,7 +49,9 @@ project/
   model/
     building_model.json
   outputs/
-    runs/<timestamp>-<fingerprint>/
+      runs/<timestamp>-<fingerprint>/
+        render_inputs/
+        render_jobs/
   .archflow/
     last-run.json
 ```
@@ -53,11 +62,11 @@ The machine-readable manifest contract is [schemas/archflow-project.schema.json]
 
 ## Execution gates
 
-The current CLI ends at inspectable file generation. Future mutating adapters must use separate commands and explicit gates:
+Application mutation and paid/external provider execution use separate gates:
 
 - CAD write gate: user selects target copy and confirms the exact mutation plan.
 - SketchUp execution gate: user selects a blank/copied model and confirms loading the generated Ruby.
-- Render gate: user selects a provider, cost/privacy policy, and reference images.
+- Render gate: selecting view and style authorizes capture and an available built-in Codex image-edit tool; an external or paid provider still requires its cost/privacy authorization.
 - Release gate: responsible professionals approve discipline-specific outputs.
 
 ## Versioning

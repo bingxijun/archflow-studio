@@ -16,6 +16,6 @@
   "pipeline": {
     "output_root": "outputs/runs",
     "execute_sketchup": false,
-    "render_provider": "none"
+    "render_provider": "auto"
   }
 }

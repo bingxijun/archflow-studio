@@ -1,0 +1,167 @@
+{
+  "schema_version": "0.1",
+  "default_style": "photorealistic-daylight",
+  "prompt_order": [
+    "source geometry and camera",
+    "building intent and materials",
+    "style medium",
+    "environment and lighting",
+    "colour and mood",
+    "geometry-preservation constraints"
+  ],
+  "research_basis": [
+    {
+      "publisher": "OpenAI",
+      "url": "https://developers.openai.com/api/docs/models/gpt-image-2",
+      "principle": "Use image editing with high-fidelity image input when an exported view must remain the composition reference."
+    },
+    {
+      "publisher": "Midjourney",
+      "url": "https://docs.midjourney.com/docs/prompts",
+      "principle": "Prefer concise, specific phrases covering subject, medium, environment, lighting, colour, mood, and composition."
+    },
+    {
+      "publisher": "Stability AI",
+      "url": "https://platform.stability.ai/docs/api-reference",
+      "principle": "Separate positive prompt, negative prompt, source image influence, and style preset or reference strength."
+    },
+    {
+      "publisher": "Adobe Firefly",
+      "url": "https://helpx.adobe.com/firefly/web/work-with-images/generate-images/writing-effective-text-prompts.html",
+      "principle": "Use direct language with subject, descriptors, style, and lighting rather than vague generation commands."
+    },
+    {
+      "publisher": "D5 Render",
+      "url": "https://support.d5render.com/support/solutions/articles/72000649240-ai-features",
+      "principle": "Keep atmosphere, enhancement, and style transfer distinct from model geometry and material authorship."
+    }
+  ],
+  "geometry_lock": [
+    "camera and crop",
+    "site boundary and adjacent-site geometry",
+    "building footprint and floor count",
+    "roof and massing silhouette",
+    "wall, slab, opening, column, and beam positions",
+    "setbacks and finished-floor elevations"
+  ],
+  "base_negative_prompt": "changed camera, changed crop, altered footprint, extra floor, missing floor, changed roof silhouette, moved wall, moved door, moved window, invented opening, warped facade, altered structural grid, changed site boundary, changed setback, impossible cantilever, duplicated building, illegible geometry, text, watermark, logo",
+  "styles": [
+    {
+      "id": "photorealistic-daylight",
+      "label_zh": "写实自然日景",
+      "label_en": "Photorealistic daylight",
+      "aliases": ["写实", "真实", "日景", "photorealistic", "daylight", "realistic"],
+      "summary_zh": "中性自然光、真实建筑材质和克制后期，适合方案汇报与通用外观展示。",
+      "prompt": "professional photorealistic architectural visualization, physically plausible materials, neutral natural daylight, soft contact shadows, realistic glazing, restrained landscaping, balanced exposure, high detail without over-sharpening",
+      "provider_hint": "photographic"
+    },
+    {
+      "id": "golden-hour",
+      "label_zh": "金色黄昏",
+      "label_en": "Golden hour",
+      "aliases": ["黄昏", "夕阳", "日落", "golden hour", "sunset"],
+      "summary_zh": "低角度暖阳和长阴影突出立面层次，适合住宅与商业建筑情绪表达。",
+      "prompt": "photorealistic architectural visualization at golden hour, low warm sunlight, long soft-edged shadows, warm interior glow beginning to appear, amber highlights, realistic sky, cinematic but natural exposure",
+      "provider_hint": "cinematic"
+    },
+    {
+      "id": "blue-hour",
+      "label_zh": "蓝调暮色",
+      "label_en": "Blue hour",
+      "aliases": ["蓝调", "暮色", "傍晚", "blue hour", "dusk"],
+      "summary_zh": "冷蓝天空与暖色室内灯形成对比，适合强调透明界面和灯光氛围。",
+      "prompt": "photorealistic blue-hour architectural visualization, deep cobalt sky, warm interior lighting, subtle facade illumination, realistic glazing reflections, controlled contrast, elegant quiet atmosphere",
+      "provider_hint": "cinematic"
+    },
+    {
+      "id": "night-architectural",
+      "label_zh": "建筑夜景",
+      "label_en": "Architectural night",
+      "aliases": ["夜景", "夜晚", "灯光", "night", "night render"],
+      "summary_zh": "以建筑照明、室内透光和安全可读的暗部表现夜间形象。",
+      "prompt": "professional nighttime architectural visualization, believable interior occupancy lighting, precise facade and landscape lighting, preserved dark detail, realistic reflections, no blown highlights, refined urban night atmosphere",
+      "provider_hint": "photographic"
+    },
+    {
+      "id": "overcast-minimal",
+      "label_zh": "阴天极简",
+      "label_en": "Overcast minimal",
+      "aliases": ["阴天", "极简", "灰调", "overcast", "minimal"],
+      "summary_zh": "柔和无硬阴影的阴天环境，突出体块、比例和材料本身。",
+      "prompt": "minimal architectural visualization under bright overcast sky, diffuse shadowless light, muted neutral palette, crisp massing, subtle material texture, calm editorial composition, restrained context",
+      "provider_hint": "photographic"
+    },
+    {
+      "id": "japanese-natural-minimal",
+      "label_zh": "日式自然极简",
+      "label_en": "Japanese natural minimal",
+      "aliases": ["日式", "和风", "木质极简", "japanese", "japanese minimal"],
+      "summary_zh": "温润木材、细腻灰白基底和安静庭院氛围，强调自然光与尺度感。",
+      "prompt": "contemporary Japanese natural-minimal architectural visualization, warm timber, pale mineral plaster, dark fine metal details, quiet planted courtyard, soft daylight, restrained colour, tactile materials, calm human scale",
+      "provider_hint": "photographic"
+    },
+    {
+      "id": "cinematic-editorial",
+      "label_zh": "电影感建筑摄影",
+      "label_en": "Cinematic editorial",
+      "aliases": ["电影感", "大片", "建筑摄影", "cinematic", "editorial"],
+      "summary_zh": "富有叙事性的光影和高级建筑摄影色调，但保持真实构造与镜头。",
+      "prompt": "cinematic editorial architectural photography, dramatic yet physically plausible light, controlled atmospheric depth, refined filmic colour grade, realistic people used sparingly for scale, premium architecture magazine quality",
+      "provider_hint": "cinematic"
+    },
+    {
+      "id": "watercolor-presentation",
+      "label_zh": "建筑水彩",
+      "label_en": "Architectural watercolor",
+      "aliases": ["水彩", "手绘", "watercolor", "architectural watercolor"],
+      "summary_zh": "透明水彩叠色、轻柔纸张纹理和保留结构线稿，适合概念汇报。",
+      "prompt": "architectural watercolor presentation, transparent layered washes, delicate retained linework, subtle cold-press paper texture, restrained landscape strokes, luminous atmosphere, precise readable building proportions",
+      "provider_hint": "digital-art"
+    },
+    {
+      "id": "pencil-concept",
+      "label_zh": "铅笔概念草图",
+      "label_en": "Pencil concept sketch",
+      "aliases": ["铅笔", "草图", "线稿", "pencil", "sketch", "line art"],
+      "summary_zh": "清晰透视线、轻微排线和重点阴影，适合表达推敲过程。",
+      "prompt": "precise architectural pencil concept sketch, confident perspective linework, controlled graphite hatching, selective soft shadows, white paper background, minimal annotations, legible geometry and openings",
+      "provider_hint": "line-art"
+    },
+    {
+      "id": "white-clay-model",
+      "label_zh": "白模体块",
+      "label_en": "White clay model",
+      "aliases": ["白模", "黏土", "体块", "clay", "white model", "massing"],
+      "summary_zh": "统一哑光白材质和工作室柔光，排除材质干扰以检查体块与开口。",
+      "prompt": "clean white clay architectural model render, uniform matte off-white material, soft studio daylight, ambient occlusion, precise edges and openings, neutral background, massing-study clarity",
+      "provider_hint": "3d-model"
+    },
+    {
+      "id": "isometric-analysis",
+      "label_zh": "等距分析图",
+      "label_en": "Isometric analysis",
+      "aliases": ["轴测分析", "等距", "分析图", "isometric", "diagram"],
+      "summary_zh": "干净背景、有限配色和清晰分区，适合解释功能与构成关系。",
+      "prompt": "clean architectural isometric analysis illustration, white background, limited colour-coded materials and zones, crisp edges, soft ambient shadows, high legibility, diagrammatic clarity, no perspective distortion",
+      "provider_hint": "isometric"
+    },
+    {
+      "id": "material-study",
+      "label_zh": "材质研究",
+      "label_en": "Material study",
+      "aliases": ["材质", "材料", "material", "material study"],
+      "summary_zh": "均衡光线和近真实纹理，重点比较木、石、金属、玻璃等材料组合。",
+      "prompt": "high-fidelity architectural material study, physically plausible timber stone metal glass and plaster, accurate roughness and reflectance, neutral soft daylight, close attention to joints and scale, restrained environment",
+      "provider_hint": "photographic"
+    },
+    {
+      "id": "interior-soft-daylight",
+      "label_zh": "室内柔光",
+      "label_en": "Interior soft daylight",
+      "aliases": ["室内", "室内日光", "interior", "interior daylight"],
+      "summary_zh": "窗边柔光、真实室内材质和克制陈设，适合空间尺度与氛围表达。",
+      "prompt": "photorealistic interior architectural visualization, soft window daylight, physically plausible materials, realistic indirect bounce light, restrained furniture and styling, natural colour balance, calm lived-in atmosphere",
+      "provider_hint": "photographic"
+    }
+  ]
+}

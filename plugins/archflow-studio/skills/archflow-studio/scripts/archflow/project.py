@@ -123,6 +123,8 @@ def validate_manifest(manifest: dict[str, Any], root: Path, check_files: bool = 
 
     if pipeline.get("execute_sketchup", False) is not False:
         issues.append("pipeline.execute_sketchup must remain false in manifest schema 0.1")
+    if pipeline.get("render_provider") not in {"auto", "codex-image-tool", "none"}:
+        issues.append("pipeline.render_provider must be 'auto', 'codex-image-tool', or 'none'")
     return issues
 
 
@@ -158,7 +160,7 @@ def create_project(root: Path, title: str, mode: str, core_skill_root: Path) -> 
         "project": {"id": slug(title), "title": title, "mode": mode},
         "inputs": {"site_cad": None, "requirements": None, "legal_sources": []},
         "model": {"building_model": "model/building_model.json"},
-        "pipeline": {"output_root": "outputs/runs", "execute_sketchup": False, "render_provider": "none"},
+        "pipeline": {"output_root": "outputs/runs", "execute_sketchup": False, "render_provider": "auto"},
     }
     write_json(manifest_path, manifest)
     return manifest_path
