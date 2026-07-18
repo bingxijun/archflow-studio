@@ -23,11 +23,18 @@ def build(source: Path, output: Path) -> str:
     if missing:
         raise FileNotFoundError(f"Missing SketchUp bridge source: {', '.join(missing)}")
     output.parent.mkdir(parents=True, exist_ok=True)
-    with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
+    # ZIP_DEFLATED output can vary with the zlib version bundled with Python.
+    # The bridge is small, so storing entries without compression gives the
+    # same archive bytes on every supported Python and operating system.
+    with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_STORED) as archive:
         for name in FILES:
             info = zipfile.ZipInfo(name, ZIP_TIME)
-            info.compress_type = zipfile.ZIP_DEFLATED
+            info.create_system = 3
+            info.compress_type = zipfile.ZIP_STORED
             info.external_attr = 0o100644 << 16
+            info.internal_attr = 0
+            info.extra = b""
+            info.comment = b""
             archive.writestr(info, (source / name).read_bytes())
     return hashlib.sha256(output.read_bytes()).hexdigest().upper()
 

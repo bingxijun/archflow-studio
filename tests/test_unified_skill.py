@@ -5,6 +5,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+import zipfile
 from pathlib import Path
 
 
@@ -48,6 +49,30 @@ class UnifiedSkillTests(unittest.TestCase):
         for item in lock["bundled_plugins"]:
             path = SKILL / "assets" / item["file"]
             self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest().upper(), item["sha256"])
+
+    def test_rbz_build_is_deterministic_and_matches_bundle(self):
+        builder_path = SKILL / "scripts" / "build_sketchup_rbz.py"
+        spec = importlib.util.spec_from_file_location("build_sketchup_rbz", builder_path)
+        module = importlib.util.module_from_spec(spec)
+        assert spec.loader
+        spec.loader.exec_module(module)
+
+        lock = json.loads((SKILL / "assets" / "integration-lock.json").read_text(encoding="utf-8"))
+        expected = lock["bundled_plugins"][0]["sha256"]
+        bundled = SKILL / "assets" / "plugins" / "archflow_bridge.rbz"
+        source = SKILL / "assets" / "sketchup-extension"
+        with tempfile.TemporaryDirectory() as directory:
+            first = Path(directory) / "first.rbz"
+            second = Path(directory) / "second.rbz"
+            first_digest = module.build(source, first)
+            second_digest = module.build(source, second)
+            self.assertEqual(first_digest, expected)
+            self.assertEqual(second_digest, expected)
+            self.assertEqual(first.read_bytes(), second.read_bytes())
+            self.assertEqual(first.read_bytes(), bundled.read_bytes())
+            with zipfile.ZipFile(first) as archive:
+                self.assertEqual(archive.namelist(), ["archflow_bridge.rb", "archflow_bridge/main.rb"])
+                self.assertTrue(all(info.compress_type == zipfile.ZIP_STORED for info in archive.infolist()))
 
     def test_only_archflow_sketchup_bridge_is_bundled(self):
         checked = [

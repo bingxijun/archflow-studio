@@ -47,6 +47,8 @@ The compatibility filename `deploy_sketchup_mcp.ps1` now deploys only the ArchFl
 python scripts\build_sketchup_rbz.py
 ```
 
+The builder uses fixed ZIP metadata and stores the two small Ruby entries without compression. This avoids zlib-dependent archive hashes across supported Python versions and operating systems.
+
 The RBZ must contain exactly:
 
 ```text

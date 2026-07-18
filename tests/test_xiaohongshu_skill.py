@@ -1,5 +1,6 @@
 import hashlib
 import importlib.util
+import os
 import subprocess
 import sys
 import tempfile
@@ -13,6 +14,10 @@ SOURCE = ROOT / "plugins" / "archflow-studio" / "skills" / "archflow-studio"
 SKILL = ROOT / "distributions" / "xiaohongshu" / "archflow"
 
 
+@unittest.skipUnless(
+    os.environ.get("ARCHFLOW_VALIDATE_XIAOHONGSHU") == "1",
+    "Xiaohongshu distribution validation is intentionally separate from GitHub core CI",
+)
 class XiaohongshuSkillTests(unittest.TestCase):
     def test_original_skill_resources_are_present(self):
         source_files = {
